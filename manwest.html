@@ -139,6 +139,10 @@
         display: flex;
         gap: 2.5rem;
       }
+      .nav-menu {
+        display: flex;
+        align-items: center;
+      }
       nav a {
         font-family: "Barlow Condensed", sans-serif;
         font-weight: 600;
@@ -151,6 +155,61 @@
       }
       nav a:hover {
         color: var(--red2);
+      }
+      .nav-toggle {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        width: 42px;
+        height: 42px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.02);
+        color: var(--white);
+        cursor: pointer;
+        transition:
+          border-color 0.2s,
+          background 0.2s,
+          color 0.2s;
+      }
+      .nav-toggle:hover {
+        border-color: rgba(232, 0, 29, 0.4);
+        color: var(--red2);
+      }
+      .nav-toggle-bars {
+        position: relative;
+        width: 16px;
+        height: 12px;
+      }
+      .nav-toggle-bars span {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        height: 1.5px;
+        background: currentColor;
+        transition:
+          transform 0.2s ease,
+          opacity 0.2s ease,
+          top 0.2s ease;
+      }
+      .nav-toggle-bars span:nth-child(1) {
+        top: 0;
+      }
+      .nav-toggle-bars span:nth-child(2) {
+        top: 5px;
+      }
+      .nav-toggle-bars span:nth-child(3) {
+        top: 10px;
+      }
+      nav.menu-open .nav-toggle-bars span:nth-child(1) {
+        top: 5px;
+        transform: rotate(45deg);
+      }
+      nav.menu-open .nav-toggle-bars span:nth-child(2) {
+        opacity: 0;
+      }
+      nav.menu-open .nav-toggle-bars span:nth-child(3) {
+        top: 5px;
+        transform: rotate(-45deg);
       }
       .nav-status {
         display: flex;
@@ -1012,8 +1071,41 @@
         nav {
           padding: 0 1.5rem;
         }
+        .nav-toggle {
+          display: inline-flex;
+        }
+        .nav-menu {
+          position: absolute;
+          top: calc(100% + 1px);
+          left: 1.5rem;
+          right: 1.5rem;
+          opacity: 0;
+          pointer-events: none;
+          transform: translateY(-10px);
+          transition:
+            opacity 0.22s ease,
+            transform 0.22s ease;
+        }
+        nav.menu-open .nav-menu {
+          opacity: 1;
+          pointer-events: auto;
+          transform: translateY(0);
+        }
         nav ul {
-          gap: 1.2rem;
+          width: 100%;
+          flex-direction: column;
+          gap: 0;
+          padding: 0.85rem 1rem;
+          background: rgba(10, 10, 12, 0.96);
+          backdrop-filter: blur(16px);
+          border: 1px solid var(--line);
+        }
+        nav ul li + li {
+          border-top: 1px solid var(--line);
+        }
+        nav ul a {
+          display: block;
+          padding: 0.95rem 0;
         }
         .nav-status {
           display: none;
@@ -1032,15 +1124,30 @@
     <canvas id="bg-canvas"></canvas>
 
     <!-- NAV -->
-    <nav>
+    <nav id="site-nav">
       <a href="#hero" class="nav-logo"><span class="dot"></span>LH.</a>
-      <ul>
-        <li><a href="#about">Profile</a></li>
-        <li><a href="#work">Projects</a></li>
-        <li><a href="#experience">Career</a></li>
-        <li><a href="#skills">Tech</a></li>
-        <li><a href="#contact">Contact</a></li>
-      </ul>
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav-menu"
+        aria-label="Toggle navigation menu"
+      >
+        <span class="nav-toggle-bars" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+      <div class="nav-menu" id="site-nav-menu">
+        <ul>
+          <li><a href="#about">Profile</a></li>
+          <li><a href="#work">Projects</a></li>
+          <li><a href="#experience">Career</a></li>
+          <li><a href="#skills">Tech</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
       <div class="nav-status">
         <span class="status-dot"></span>
         <span id="clock">00:00:00</span>
@@ -1606,6 +1713,26 @@
           cur.style.cssText = "";
           ring.style.cssText = "";
         });
+      });
+
+      // ── MOBILE NAV ────────────────────────────────────────
+      const siteNav = document.getElementById("site-nav");
+      const navToggle = siteNav.querySelector(".nav-toggle");
+      const navLinks = siteNav.querySelectorAll(".nav-menu a");
+      function setNavOpen(isOpen) {
+        siteNav.classList.toggle("menu-open", isOpen);
+        navToggle.setAttribute("aria-expanded", String(isOpen));
+      }
+      navToggle.addEventListener("click", () => {
+        setNavOpen(!siteNav.classList.contains("menu-open"));
+      });
+      navLinks.forEach((link) => {
+        link.addEventListener("click", () => {
+          if (window.innerWidth <= 900) setNavOpen(false);
+        });
+      });
+      window.addEventListener("resize", () => {
+        if (window.innerWidth > 900) setNavOpen(false);
       });
 
       // ── CLOCK ──────────────────────────────────────────────
