@@ -1743,7 +1743,12 @@
             <div class="contact-block">
               <div class="cblock-label">Phone</div>
               <div class="cblock-val">
-                <a href="tel:+601111250420">(+60) 11-1125 0420</a>
+                <a
+                  href="https://wa.me/601111250420?text=Hi%20Luqman%2C%20I%27d%20like%20to%20connect%20with%20you."
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >(+60) 11-1125 0420</a
+                >
               </div>
             </div>
             <div class="contact-block">
@@ -1761,10 +1766,12 @@
           </div>
           <div class="reveal">
             <a
-              href="mailto:luqmanharriz23@gmail.com"
+              href="https://wa.me/601111250420?text=Hi%20Luqman%2C%20I%27d%20like%20to%20connect%20with%20you."
+              target="_blank"
+              rel="noopener noreferrer"
               class="btn btn-primary"
               style="font-size: 0.9rem; padding: 1rem 3rem"
-              >Send Message →</a
+              >Send message →</a
             >
           </div>
         </div>
@@ -1810,10 +1817,7 @@
       function applyTheme(theme) {
         root.setAttribute("data-theme", theme);
         themeToggleLabel.textContent = theme === "light" ? "Dark" : "Light";
-        themeToggle.setAttribute(
-          "aria-pressed",
-          String(theme === "light"),
-        );
+        themeToggle.setAttribute("aria-pressed", String(theme === "light"));
       }
       const savedTheme = localStorage.getItem(themeStorageKey);
       const preferredTheme =
