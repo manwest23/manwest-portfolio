@@ -1,0 +1,1926 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LUQMAN HARRIZ — UI/UX & Frontend Developer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,700&family=Barlow:wght@300;400;500&family=Share+Tech+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0a0a0c;
+        --bg2: #0f0f12;
+        --bg3: #141418;
+        --surface: #1a1a20;
+        --line: rgba(255, 255, 255, 0.07);
+        --text: #e8e6e0;
+        --muted: #5a5960;
+        --dim: #2e2d34;
+        --red: #e8001d;
+        --red2: #ff1e36;
+        --red-dim: rgba(232, 0, 29, 0.15);
+        --gold: #f5a800;
+        --gold-dim: rgba(245, 168, 0, 0.12);
+        --white: #ffffff;
+      }
+
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Barlow", sans-serif;
+        font-weight: 300;
+        overflow-x: hidden;
+        cursor: none;
+      }
+
+      /* ── GRAIN OVERLAY ── */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: 9000;
+        pointer-events: none;
+        background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+        opacity: 0.4;
+      }
+
+      /* ── CURSOR ── */
+      #cur {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        width: 6px;
+        height: 6px;
+        background: var(--red);
+        border-radius: 50%;
+        transition:
+          width 0.12s,
+          height 0.12s,
+          background 0.15s;
+      }
+      #cur-ring {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        width: 28px;
+        height: 28px;
+        border: 1px solid rgba(232, 0, 29, 0.6);
+        border-radius: 50%;
+        transition:
+          transform 0.18s cubic-bezier(0.23, 1, 0.32, 1),
+          width 0.2s,
+          height 0.2s;
+      }
+
+      /* ── SPEED LINES BG ── */
+      #bg-canvas {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      /* ── NAV ── */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 500;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 3rem;
+        height: 56px;
+        background: rgba(10, 10, 12, 0.92);
+        backdrop-filter: blur(16px);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-logo {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 900;
+        font-size: 1.3rem;
+        letter-spacing: 0.06em;
+        color: var(--white);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .nav-logo .dot {
+        width: 8px;
+        height: 8px;
+        background: var(--red);
+        border-radius: 50%;
+        display: inline-block;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 2.5rem;
+      }
+      nav a {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 600;
+        font-size: 0.78rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      nav a:hover {
+        color: var(--red2);
+      }
+      .nav-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.62rem;
+        color: var(--muted);
+        letter-spacing: 0.1em;
+      }
+      .status-dot {
+        width: 6px;
+        height: 6px;
+        background: #00e676;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+          box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.4);
+        }
+        50% {
+          opacity: 0.7;
+          box-shadow: 0 0 0 5px rgba(0, 230, 118, 0);
+        }
+      }
+
+      section {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* ── HERO ── */
+      #hero {
+        min-height: 100vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        align-items: center;
+        padding: 0 3rem;
+        max-width: 1400px;
+        margin: 0 auto;
+        gap: 2rem;
+        padding-top: 56px;
+      }
+
+      .hero-left {
+      }
+
+      .hero-lap {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.65rem;
+        letter-spacing: 0.25em;
+        color: var(--red);
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        opacity: 0;
+        animation: slideIn 0.6s 0.3s forwards;
+      }
+      .hero-lap::before {
+        content: "";
+        display: block;
+        width: 24px;
+        height: 2px;
+        background: var(--red);
+      }
+
+      h1 {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 900;
+        font-size: clamp(4rem, 8vw, 8.5rem);
+        line-height: 0.92;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+        margin-bottom: 1.8rem;
+        opacity: 0;
+        animation: slideIn 0.6s 0.5s forwards;
+      }
+      h1 .ghost {
+        color: transparent;
+        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+      }
+      h1 .red {
+        color: var(--red);
+      }
+
+      .hero-position {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        opacity: 0;
+        animation: slideIn 0.6s 0.65s forwards;
+      }
+      .pos-number {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 900;
+        font-size: 4.5rem;
+        line-height: 1;
+        color: var(--red);
+        border-right: 2px solid var(--dim);
+        padding-right: 1.5rem;
+      }
+      .pos-info {
+      }
+      .pos-title {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--white);
+      }
+      .pos-subtitle {
+        font-size: 0.75rem;
+        color: var(--muted);
+        letter-spacing: 0.05em;
+        margin-top: 0.2rem;
+      }
+
+      .hero-stats {
+        display: flex;
+        gap: 0;
+        margin-bottom: 2.5rem;
+        border: 1px solid var(--line);
+        opacity: 0;
+        animation: slideIn 0.6s 0.8s forwards;
+      }
+      .hstat {
+        flex: 1;
+        padding: 1rem 1.2rem;
+        border-right: 1px solid var(--line);
+        position: relative;
+        overflow: hidden;
+      }
+      .hstat:last-child {
+        border-right: none;
+      }
+      .hstat::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(135deg, var(--red-dim), transparent);
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+      .hstat:hover::before {
+        opacity: 1;
+      }
+      .hstat-val {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 800;
+        font-size: 1.6rem;
+        color: var(--white);
+        line-height: 1;
+      }
+      .hstat-lbl {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.58rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 0.3rem;
+      }
+
+      .hero-ctas {
+        display: flex;
+        gap: 1rem;
+        opacity: 0;
+        animation: slideIn 0.6s 0.95s forwards;
+      }
+      .btn {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 700;
+        font-size: 0.8rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        padding: 0.75rem 2rem;
+        text-decoration: none;
+        transition: all 0.2s;
+        cursor: pointer;
+        border: none;
+        clip-path: polygon(
+          0 0,
+          calc(100% - 10px) 0,
+          100% 10px,
+          100% 100%,
+          10px 100%,
+          0 calc(100% - 10px)
+        );
+      }
+      .btn-primary {
+        background: var(--red);
+        color: #fff;
+      }
+      .btn-primary:hover {
+        background: var(--red2);
+        transform: translateY(-2px);
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--text);
+        border: 1px solid var(--dim);
+        clip-path: polygon(
+          0 0,
+          calc(100% - 10px) 0,
+          100% 10px,
+          100% 100%,
+          10px 100%,
+          0 calc(100% - 10px)
+        );
+      }
+      .btn-ghost:hover {
+        border-color: var(--red);
+        color: var(--red);
+      }
+
+      .hero-right {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.2rem;
+        opacity: 0;
+        animation: fadeIn 0.9s 0.5s forwards;
+      }
+      #hero-canvas {
+        width: min(520px, 95%);
+        height: min(520px, 95vw);
+        display: block;
+      }
+      .telemetry-bar {
+        width: min(520px, 95%);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid var(--line);
+        padding: 0.75rem 1.2rem;
+        background: var(--bg2);
+      }
+      .tel-item {
+        text-align: center;
+      }
+      .tel-val {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.8rem;
+        color: var(--gold);
+      }
+      .tel-lbl {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.52rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 0.15rem;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* ── SECTION HEADERS ── */
+      .sec-wrap {
+        max-width: 1300px;
+        margin: 0 auto;
+      }
+      .sec-label {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.62rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: var(--red);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+      }
+      .sec-label::before {
+        content: "";
+        display: block;
+        width: 32px;
+        height: 1px;
+        background: var(--red);
+      }
+      .sec-heading {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 900;
+        font-size: clamp(3rem, 7vw, 6.5rem);
+        line-height: 0.92;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        margin-bottom: 4rem;
+      }
+      .sec-heading span {
+        color: var(--red);
+      }
+      .sec-heading .ghost {
+        color: transparent;
+        -webkit-text-stroke: 1px var(--dim);
+      }
+
+      /* ── ABOUT ── */
+      #about {
+        padding: 8rem 3rem;
+        background: var(--bg2);
+      }
+      .about-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 6rem;
+        align-items: start;
+      }
+      .about-body {
+        font-size: 0.88rem;
+        line-height: 2;
+        color: rgba(232, 230, 224, 0.6);
+        margin-bottom: 1.2rem;
+      }
+      .driver-card {
+        border: 1px solid var(--line);
+        background: var(--bg3);
+        padding: 2rem;
+        position: relative;
+        overflow: hidden;
+      }
+      .driver-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--red), var(--gold));
+      }
+      .driver-card-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.8rem 0;
+        border-bottom: 1px solid var(--line);
+        font-size: 0.78rem;
+      }
+      .driver-card-row:last-child {
+        border-bottom: none;
+      }
+      .dc-label {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+      .dc-value {
+        font-weight: 500;
+        color: var(--text);
+      }
+      .about-podium {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1px;
+        background: var(--line);
+        margin-top: 2rem;
+      }
+      .podium-item {
+        background: var(--bg3);
+        padding: 1.5rem;
+        text-align: center;
+      }
+      .pod-n {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 900;
+        font-size: 2.8rem;
+        color: var(--red);
+        line-height: 1;
+      }
+      .pod-l {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.58rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 0.3rem;
+      }
+
+      /* ── PROJECTS ── */
+      #work {
+        padding: 8rem 3rem;
+      }
+      .race-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2px;
+        background: var(--line);
+      }
+      .race-card {
+        background: var(--bg2);
+        padding: 2.5rem;
+        position: relative;
+        overflow: hidden;
+        min-height: 280px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: background 0.3s;
+        cursor: pointer;
+      }
+      .race-card:hover {
+        background: var(--bg3);
+      }
+      .race-card::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: var(--red);
+        transform: scaleY(0);
+        transform-origin: top;
+        transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+      }
+      .race-card:hover::after {
+        transform: scaleY(1);
+      }
+      .race-num {
+        position: absolute;
+        top: 1.5rem;
+        right: 2rem;
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 900;
+        font-size: 5rem;
+        line-height: 1;
+        color: rgba(255, 255, 255, 0.03);
+        pointer-events: none;
+      }
+      .race-circuit {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--red);
+        margin-bottom: 0.8rem;
+      }
+      .race-title {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 800;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        color: var(--white);
+        line-height: 1.1;
+        margin-bottom: 0.8rem;
+      }
+      .race-desc {
+        font-size: 0.78rem;
+        line-height: 1.8;
+        color: rgba(232, 230, 224, 0.5);
+      }
+      .race-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-top: 1.5rem;
+      }
+      .rtag {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.58rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.2rem 0.65rem;
+        border: 1px solid var(--dim);
+        color: var(--muted);
+        transition:
+          border-color 0.2s,
+          color 0.2s;
+      }
+      .race-card:hover .rtag {
+        border-color: rgba(232, 0, 29, 0.35);
+        color: var(--red);
+      }
+      .race-pos {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-top: 1.2rem;
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.6rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+        opacity: 0;
+        transform: translateX(-8px);
+        transition:
+          opacity 0.3s,
+          transform 0.3s;
+      }
+      .race-card:hover .race-pos {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .race-pos::before {
+        content: "";
+        display: block;
+        width: 16px;
+        height: 1px;
+        background: var(--red);
+      }
+
+      /* ── EXPERIENCE ── */
+      #experience {
+        padding: 8rem 3rem;
+        background: var(--bg2);
+      }
+      .pit-lane {
+        position: relative;
+        padding-left: 3rem;
+      }
+      .pit-lane::before {
+        content: "";
+        position: absolute;
+        left: 8px;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: repeating-linear-gradient(
+          to bottom,
+          var(--red) 0,
+          var(--red) 8px,
+          transparent 8px,
+          transparent 16px
+        );
+      }
+      .pit-stop {
+        position: relative;
+        margin-bottom: 4rem;
+        opacity: 0;
+        transform: translateX(-20px);
+        transition:
+          opacity 0.7s,
+          transform 0.7s;
+      }
+      .pit-stop.visible {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      .pit-dot {
+        position: absolute;
+        left: -3rem;
+        top: 0.3rem;
+        width: 16px;
+        height: 16px;
+        background: var(--bg2);
+        border: 2px solid var(--red);
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      }
+      .pit-meta {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.62rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--red);
+        margin-bottom: 0.6rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      .pit-sep {
+        color: var(--dim);
+      }
+      .pit-role {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 800;
+        font-size: 1.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--white);
+        margin-bottom: 0.2rem;
+      }
+      .pit-team {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-bottom: 1rem;
+      }
+      .pit-body {
+        font-size: 0.8rem;
+        line-height: 1.9;
+        color: rgba(232, 230, 224, 0.5);
+        max-width: 650px;
+      }
+
+      /* ── SKILLS ── */
+      #skills {
+        padding: 8rem 3rem;
+      }
+      .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2px;
+        background: var(--line);
+      }
+      .skill-col {
+        background: var(--bg2);
+        padding: 2rem;
+      }
+      .skill-col-title {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 800;
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--white);
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .skill-col-title::before {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: var(--red);
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .skill-item {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.55rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        font-size: 0.8rem;
+        color: rgba(232, 230, 224, 0.55);
+        transition:
+          color 0.2s,
+          padding-left 0.2s;
+      }
+      .skill-item:hover {
+        color: var(--text);
+        padding-left: 0.5rem;
+      }
+      .skill-item::before {
+        content: "";
+        width: 3px;
+        height: 3px;
+        background: var(--red);
+        border-radius: 50%;
+        flex-shrink: 0;
+        opacity: 0.5;
+      }
+
+      /* ── TICKER ── */
+      .ticker-strip {
+        overflow: hidden;
+        padding: 1.2rem 0;
+        border-top: 1px solid var(--line);
+        border-bottom: 1px solid var(--line);
+        margin-top: 4rem;
+        background: var(--bg2);
+      }
+      .ticker-row {
+        display: flex;
+        white-space: nowrap;
+        animation: tickr 22s linear infinite;
+        gap: 0;
+      }
+      .ticker-row.rev {
+        animation-direction: reverse;
+        animation-duration: 28s;
+      }
+      .tick-item {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 700;
+        font-size: 1.1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.15em;
+        color: rgba(255, 255, 255, 0.12);
+        padding: 0 2.5rem;
+        flex-shrink: 0;
+        transition: color 0.2s;
+      }
+      .tick-item:hover {
+        color: var(--red);
+      }
+      .tick-item .sep {
+        color: var(--red);
+        margin-left: 2.5rem;
+      }
+      @keyframes tickr {
+        from {
+          transform: translateX(0);
+        }
+        to {
+          transform: translateX(-50%);
+        }
+      }
+
+      /* ── CONTACT ── */
+      #contact {
+        padding: 8rem 3rem;
+        background: var(--bg2);
+        position: relative;
+        overflow: hidden;
+      }
+      #contact::before {
+        content: "CONTACT";
+        position: absolute;
+        right: -2rem;
+        top: 50%;
+        transform: translateY(-50%) rotate(90deg);
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 900;
+        font-size: 12rem;
+        color: rgba(255, 255, 255, 0.015);
+        pointer-events: none;
+        letter-spacing: -0.05em;
+        white-space: nowrap;
+      }
+      .contact-inner {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .contact-big {
+        font-family: "Barlow Condensed", sans-serif;
+        font-weight: 900;
+        font-size: clamp(3.5rem, 9vw, 8rem);
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+        line-height: 0.92;
+        margin: 1rem 0 2.5rem;
+      }
+      .contact-big span {
+        color: var(--red);
+      }
+      .contact-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3rem;
+        align-items: flex-start;
+        margin-bottom: 3rem;
+      }
+      .contact-block {
+      }
+      .cblock-label {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.58rem;
+        letter-spacing: 0.25em;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 0.5rem;
+      }
+      .cblock-val {
+        font-size: 0.9rem;
+        color: var(--text);
+      }
+      .cblock-val a {
+        color: var(--text);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+      .cblock-val a:hover {
+        color: var(--red);
+      }
+      .cblock-val a.hi {
+        color: var(--red);
+      }
+      .cblock-val a.hi:hover {
+        color: var(--red2);
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        padding: 1.2rem 3rem;
+        border-top: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--bg);
+      }
+      footer span {
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.58rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      /* ── REVEAL ── */
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition:
+          opacity 0.75s,
+          transform 0.75s;
+      }
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* ── SCANLINE ── */
+      .scanline {
+        position: fixed;
+        inset: 0;
+        z-index: 8999;
+        pointer-events: none;
+        background: repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 2px,
+          rgba(0, 0, 0, 0.015) 2px,
+          rgba(0, 0, 0, 0.015) 4px
+        );
+      }
+
+      @media (max-width: 900px) {
+        #hero {
+          grid-template-columns: 1fr;
+          padding: 80px 1.5rem 3rem;
+        }
+        .hero-right {
+          display: none;
+        }
+        .about-grid {
+          grid-template-columns: 1fr;
+          gap: 3rem;
+        }
+        .race-grid {
+          grid-template-columns: 1fr;
+        }
+        .skills-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        #about,
+        #work,
+        #experience,
+        #skills,
+        #contact {
+          padding: 5rem 1.5rem;
+        }
+        nav {
+          padding: 0 1.5rem;
+        }
+        nav ul {
+          gap: 1.2rem;
+        }
+        .nav-status {
+          display: none;
+        }
+        footer {
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="scanline"></div>
+    <div id="cur"></div>
+    <div id="cur-ring"></div>
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- NAV -->
+    <nav>
+      <a href="#hero" class="nav-logo"><span class="dot"></span>LH.</a>
+      <ul>
+        <li><a href="#about">Profile</a></li>
+        <li><a href="#work">Projects</a></li>
+        <li><a href="#experience">Career</a></li>
+        <li><a href="#skills">Tech</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <div class="nav-status">
+        <span class="status-dot"></span>
+        <span id="clock">00:00:00</span>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero">
+      <div class="hero-left">
+        <div class="hero-lap">
+          UI/UX Designer &amp; Frontend Developer — Shah Alam, MY
+        </div>
+        <h1>
+          LUQMAN<br />
+          <span class="red">HARRIZ</span><br />
+        </h1>
+        <div class="hero-position">
+          <!-- <div class="pos-number">01</div> -->
+          <div class="pos-info">
+            <div class="pos-title">Frontend Developer · UI/UX Designer</div>
+            <!-- <div class="pos-subtitle">
+              Techno Mech (M) Sdn Bhd — TNB Bodyshop · Since Nov 2024
+            </div> -->
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="hstat">
+            <div class="hstat-val">10+</div>
+            <div class="hstat-lbl">Projects</div>
+          </div>
+          <!-- <div class="hstat">
+            <div class="hstat-val">3.33</div>
+            <div class="hstat-lbl">CGPA</div>
+          </div> -->
+          <div class="hstat">
+            <div class="hstat-val">3rd</div>
+            <div class="hstat-lbl">AI Hackathon</div>
+          </div>
+          <div class="hstat">
+            <div class="hstat-val">3+</div>
+            <div class="hstat-lbl">Years XP</div>
+          </div>
+        </div>
+        <div class="hero-ctas">
+          <a href="#work" class="btn btn-primary">View Projects</a>
+          <a href="#contact" class="btn btn-ghost">Contact Me</a>
+        </div>
+      </div>
+      <div class="hero-right">
+        <canvas id="hero-canvas" width="520" height="520"></canvas>
+        <div class="telemetry-bar">
+          <div class="tel-item">
+            <div class="tel-val" id="tel-speed">---</div>
+            <div class="tel-lbl">Stack Speed</div>
+          </div>
+          <div class="tel-item">
+            <div class="tel-val" id="tel-throttle">100%</div>
+            <div class="tel-lbl">Throttle</div>
+          </div>
+          <div class="tel-item">
+            <div class="tel-val" id="tel-gear">P1</div>
+            <div class="tel-lbl">Position</div>
+          </div>
+          <div class="tel-item">
+            <div class="tel-val" id="tel-lap">Shah Alam</div>
+            <div class="tel-lbl">Location</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="sec-wrap" style="padding: 0 0">
+        <div class="about-grid">
+          <div class="reveal">
+            <div class="sec-label">Developer Profile</div>
+            <h2
+              class="sec-heading"
+              style="font-size: clamp(2.5rem, 5vw, 4.5rem)"
+            >
+              ABOUT<br /><span>ME</span>
+            </h2>
+            <p class="about-body">
+              Information Technology graduate from University Tenaga Nasional
+              (UNITEN), specialising in Information Systems. My passion lies in
+              crafting intuitive interfaces that are as fast in performance as
+              they are refined in design.
+            </p>
+            <p class="about-body">
+              Currently driving for Techno Mech (M) Sdn Bhd — the TNB Bodyshop —
+              where I've shipped 10+ live digital products for Tenaga Nasional
+              Berhad's ecosystem. Equally comfortable in Figma, the browser, or
+              the command line.
+            </p>
+            <p class="about-body">
+              Co-organised the VIBE-A-THON TNB CORES AI Hackathon 2025 and
+              secured 3rd place with VIMS, an AI-enabled Visitor Management
+              System.
+            </p>
+          </div>
+          <div class="reveal" style="transition-delay: 0.15s">
+            <div class="driver-card">
+              <div class="driver-card-row">
+                <span class="dc-label">Full Name</span
+                ><span class="dc-value">Luqman Harriz Bin Saifullizan</span>
+              </div>
+              <!-- <div class="driver-card-row">
+                <span class="dc-label">Nationality</span
+                ><span class="dc-value">Malaysian</span>
+              </div> -->
+              <div class="driver-card-row">
+                <span class="dc-label">Base</span
+                ><span class="dc-value">Shah Alam, Selangor</span>
+              </div>
+              <div class="driver-card-row">
+                <span class="dc-label">Team</span
+                ><span class="dc-value">Techno Mech (M) Sdn Bhd</span>
+              </div>
+              <div class="driver-card-row">
+                <span class="dc-label">Degree</span
+                ><span class="dc-value">B.IT (Information Systems) Hons.</span>
+              </div>
+              <div class="driver-card-row">
+                <span class="dc-label">University</span
+                ><span class="dc-value">UNITEN Putrajaya Campus</span>
+              </div>
+              <!-- <div class="driver-card-row">
+                <span class="dc-label">CGPA</span
+                ><span class="dc-value" style="color: var(--red)"
+                  >3.33 / 4.00</span
+                >
+              </div> -->
+              <div class="driver-card-row">
+                <span class="dc-label">Contact</span
+                ><span class="dc-value">luqmanharriz23@gmail.com</span>
+              </div>
+            </div>
+            <div class="about-podium">
+              <div class="podium-item">
+                <div class="pod-n">10+</div>
+                <div class="pod-l">Live Projects</div>
+              </div>
+              <div class="podium-item">
+                <div class="pod-n">3</div>
+                <div class="pod-l">Companies</div>
+              </div>
+              <div class="podium-item">
+                <div class="pod-n" style="color: var(--gold)">3rd</div>
+                <div class="pod-l">AI Hackathon</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section id="work">
+      <div class="sec-wrap">
+        <div class="sec-label reveal">Selected Projects</div>
+        <h2 class="sec-heading reveal">SELECTED<br /><span>PROJECTS</span></h2>
+        <div class="race-grid">
+          <div class="race-card reveal">
+            <span class="race-num">01</span>
+            <div>
+              <div class="race-circuit">WordPress · Figma · 2026</div>
+              <div class="race-title">TNB ET Conference 2026 Website</div>
+              <div class="race-desc">
+                End-to-end design and development for TNB's engineering and
+                technology conference site. Prototyped in Figma, deployed on
+                WordPress.
+              </div>
+            </div>
+            <div>
+              <div class="race-tags">
+                <span class="rtag">Figma</span
+                ><span class="rtag">WordPress</span
+                ><span class="rtag">UI/UX</span>
+              </div>
+              <!-- <div class="race-pos">View Project</div> -->
+            </div>
+          </div>
+
+          <div class="race-card reveal" style="transition-delay: 0.07s">
+            <span class="race-num">02</span>
+            <div>
+              <div class="race-circuit">.NET 8 · Figma · 2025</div>
+              <div class="race-title">Cahaya Resort (TNB Holiday)</div>
+              <div class="race-desc">
+                Modern responsive site for TNB's holiday resort. Full UI/UX
+                design in Figma, implemented with .NET 8 for a polished,
+                performant experience.
+              </div>
+            </div>
+            <div>
+              <div class="race-tags">
+                <span class="rtag">Figma</span><span class="rtag">.NET 8</span
+                ><span class="rtag">Responsive</span>
+              </div>
+              <!-- <div class="race-pos">View Project</div> -->
+            </div>
+          </div>
+
+          <div class="race-card reveal" style="transition-delay: 0.14s">
+            <span class="race-num">03</span>
+            <div>
+              <div class="race-circuit">.NET 8 · Figma · 2025</div>
+              <div class="race-title">TNB PC Leasing 2.0 Web App</div>
+              <div class="race-desc">
+                Full web application supporting TNB's internal PC leasing
+                programme with end-to-end leasing workflows. UI/UX in Figma,
+                built on .NET 8.
+              </div>
+            </div>
+            <div>
+              <div class="race-tags">
+                <span class="rtag">Figma</span><span class="rtag">.NET 8</span
+                ><span class="rtag">Web App</span>
+              </div>
+              <!-- <div class="race-pos">View Project</div> -->
+            </div>
+          </div>
+
+          <div class="race-card reveal" style="transition-delay: 0.21s">
+            <span class="race-num">04</span>
+            <div>
+              <div class="race-circuit">HTML · Bootstrap 5 · 2025</div>
+              <div class="race-title">TNB Tariff Microsite</div>
+              <div class="race-desc">
+                Public-facing microsite communicating TNB's tariff structure.
+                Designed in Figma, implemented with HTML & Bootstrap 5 for
+                maximum performance.
+              </div>
+            </div>
+            <div>
+              <div class="race-tags">
+                <span class="rtag">HTML</span
+                ><span class="rtag">Bootstrap 5</span
+                ><span class="rtag">Figma</span>
+              </div>
+              <!-- <div class="race-pos">View Project</div> -->
+            </div>
+          </div>
+
+          <div class="race-card reveal" style="transition-delay: 0.28s">
+            <span class="race-num">05</span>
+            <div>
+              <div class="race-circuit">Figma · 2025</div>
+              <div class="race-title">NETR &amp; PeopleApp UX Enhancement</div>
+              <div class="race-desc">
+                UX redesign and high-fidelity Figma prototyping for two internal
+                TNB applications — improving usability, accessibility, and
+                visual consistency.
+              </div>
+            </div>
+            <div>
+              <div class="race-tags">
+                <span class="rtag">Figma</span
+                ><span class="rtag">Prototyping</span
+                ><span class="rtag">UX</span>
+              </div>
+              <!-- <div class="race-pos">View Project</div> -->
+            </div>
+          </div>
+
+          <div class="race-card reveal" style="transition-delay: 0.35s">
+            <span class="race-num">06</span>
+            <div>
+              <div class="race-circuit">AI · Hackathon · 2025 🏆</div>
+              <div class="race-title">VIMS — Visitor Management System</div>
+              <div class="race-desc">
+                AI-enabled visitor tracking system built under time pressure at
+                VIBE-A-THON TNB CORES AI Hackathon. Secured 3rd place out of all
+                competing teams.
+              </div>
+            </div>
+            <div>
+              <div class="race-tags">
+                <span class="rtag">AI</span><span class="rtag">Hackathon</span
+                ><span
+                  class="rtag"
+                  style="border-color: var(--gold); color: var(--gold)"
+                  >3rd Place</span
+                >
+              </div>
+              <!-- <div class="race-pos">View Project</div> -->
+            </div>
+          </div>
+
+          <div class="race-card reveal" style="transition-delay: 0.42s">
+            <span class="race-num">07</span>
+            <div>
+              <div class="race-circuit">Laravel · PHP · 2024</div>
+              <div class="race-title">
+                Dental Clinic Management System (FYP)
+              </div>
+              <div class="race-desc">
+                Final Year Project transitioning Rilla Rusli Dental Clinic from
+                paper to digital. Appointment booking, patient management, and
+                automated SMTP email reminders.
+              </div>
+            </div>
+            <div>
+              <div class="race-tags">
+                <span class="rtag">Laravel</span><span class="rtag">PHP</span
+                ><span class="rtag">Bootstrap</span
+                ><span class="rtag">SMTP</span>
+              </div>
+              <!-- <div class="race-pos">View Project</div> -->
+            </div>
+          </div>
+
+          <div class="race-card reveal" style="transition-delay: 0.49s">
+            <span class="race-num">08</span>
+            <div>
+              <div class="race-circuit">WordPress · Figma · 2025</div>
+              <div class="race-title">
+                Sukan TNB &amp; Kompleks An-Nur Series
+              </div>
+              <div class="race-desc">
+                Multiple event and community sites for TNB including Sukan TNB
+                2025, Ihya Ramadan, Majlis Korban, Khatan and Tilawah — all
+                designed in Figma, built on WordPress.
+              </div>
+            </div>
+            <div>
+              <div class="race-tags">
+                <span class="rtag">WordPress</span
+                ><span class="rtag">Figma</span><span class="rtag">Events</span>
+              </div>
+              <!-- <div class="race-pos">View Project</div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <div class="sec-wrap">
+        <div class="sec-label reveal">Career History</div>
+        <h2 class="sec-heading reveal">Where I've<br /><span>Been.</span></h2>
+        <div class="pit-lane">
+          <div class="pit-stop reveal">
+            <div class="pit-dot"></div>
+            <div class="pit-meta">
+              Nov 2024 — Present <span class="pit-sep">·</span> Current
+            </div>
+            <div class="pit-role">
+              SharePoint Dev · UI/UX Designer · Frontend Dev
+            </div>
+            <div class="pit-team">Techno Mech (M) Sdn Bhd — TNB Bodyshop</div>
+            <div class="pit-body">
+              Designing and developing responsive websites focused on UX and
+              cross-platform functionality. Using Figma for prototyping,
+              WordPress and .NET 8 for front-end implementation, and SharePoint
+              Designer for intranet portals. Delivered 10+ live projects across
+              the TNB digital ecosystem.
+            </div>
+          </div>
+
+          <div class="pit-stop reveal" style="transition-delay: 0.1s">
+            <div class="pit-dot"></div>
+            <div class="pit-meta">
+              Jul 2023 — Sep 2023 <span class="pit-sep">·</span> Internship
+            </div>
+            <div class="pit-role">Full-Stack Developer</div>
+            <div class="pit-team">Vectory Innovation Sdn Bhd</div>
+            <div class="pit-body">
+              Built responsive web applications using Laravel (frontend) and PHP
+              (backend). Thorough testing and bug resolution, performance
+              optimisation, and cross-device compatibility. Collaborated in an
+              agile team environment.
+            </div>
+          </div>
+
+          <div class="pit-stop reveal" style="transition-delay: 0.2s">
+            <div class="pit-dot"></div>
+            <div class="pit-meta">
+              Jan 2022 — Present <span class="pit-sep">·</span> Freelance
+            </div>
+            <div class="pit-role">Designer & Developer</div>
+            <div class="pit-team">Soda.stdio</div>
+            <div class="pit-body">
+              Independent studio covering website and mobile app development,
+              UI/UX design, and graphic design including jersey branding with
+              Adobe Illustrator. Full client management from brief to delivery.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <div class="sec-wrap">
+        <div class="sec-label reveal">Technical Skills</div>
+        <h2 class="sec-heading reveal">Built With<br /><span>These.</span></h2>
+        <div class="skills-grid reveal">
+          <div class="skill-col">
+            <div class="skill-col-title">Code</div>
+            <div class="skill-item">HTML & CSS</div>
+            <div class="skill-item">JavaScript / jQuery</div>
+            <div class="skill-item">PHP & SQL</div>
+            <div class="skill-item">Python</div>
+            <div class="skill-item">.NET 8</div>
+            <div class="skill-item">Laravel</div>
+            <div class="skill-item">Bootstrap 5</div>
+            <div class="skill-item">Firebase</div>
+            <div class="skill-item">Docker</div>
+          </div>
+          <div class="skill-col">
+            <div class="skill-col-title">Design</div>
+            <div class="skill-item">Figma</div>
+            <div class="skill-item">Protopie</div>
+            <div class="skill-item">Adobe Illustrator</div>
+            <div class="skill-item">Canva</div>
+            <div class="skill-item">UI Prototyping</div>
+            <div class="skill-item">UX Research</div>
+            <div class="skill-item">Wireframing</div>
+            <div class="skill-item">Visual Identity</div>
+          </div>
+          <div class="skill-col">
+            <div class="skill-col-title">Platforms</div>
+            <div class="skill-item">WordPress</div>
+            <div class="skill-item">Microsoft SharePoint</div>
+            <div class="skill-item">Microsoft 365</div>
+            <div class="skill-item">SAP S/4HANA</div>
+            <div class="skill-item">HeidiSQL</div>
+            <div class="skill-item">VS Code</div>
+            <div class="skill-item">Packet Tracer</div>
+          </div>
+          <div class="skill-col">
+            <div class="skill-col-title">Certs</div>
+            <div class="skill-item">CCNAv7: Intro Networks</div>
+            <div class="skill-item">SAP S/4HANA Certified</div>
+            <div class="skill-item">Google Analytics</div>
+            <div
+              class="skill-item"
+              style="color: var(--muted); font-size: 0.7rem; margin-top: 1rem"
+            >
+              OS
+            </div>
+            <div class="skill-item">Windows</div>
+            <div class="skill-item">macOS</div>
+            <div class="skill-item">Linux</div>
+          </div>
+        </div>
+
+        <div class="ticker-strip reveal">
+          <div class="ticker-row">
+            <span class="tick-item">Figma<span class="sep">·</span></span>
+            <span class="tick-item">WordPress<span class="sep">·</span></span>
+            <span class="tick-item">.NET 8<span class="sep">·</span></span>
+            <span class="tick-item">Laravel<span class="sep">·</span></span>
+            <span class="tick-item">Bootstrap 5<span class="sep">·</span></span>
+            <span class="tick-item">SharePoint<span class="sep">·</span></span>
+            <span class="tick-item">PHP<span class="sep">·</span></span>
+            <span class="tick-item"
+              >Adobe Illustrator<span class="sep">·</span></span
+            >
+            <span class="tick-item">Protopie<span class="sep">·</span></span>
+            <span class="tick-item">Firebase<span class="sep">·</span></span>
+            <span class="tick-item">Figma<span class="sep">·</span></span>
+            <span class="tick-item">WordPress<span class="sep">·</span></span>
+            <span class="tick-item">.NET 8<span class="sep">·</span></span>
+            <span class="tick-item">Laravel<span class="sep">·</span></span>
+            <span class="tick-item">Bootstrap 5<span class="sep">·</span></span>
+            <span class="tick-item">SharePoint<span class="sep">·</span></span>
+            <span class="tick-item">PHP<span class="sep">·</span></span>
+            <span class="tick-item"
+              >Adobe Illustrator<span class="sep">·</span></span
+            >
+            <span class="tick-item">Protopie<span class="sep">·</span></span>
+            <span class="tick-item">Firebase<span class="sep">·</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="sec-wrap">
+        <div class="contact-inner">
+          <div class="sec-label reveal">Open For Opportunities</div>
+          <div class="contact-big reveal">
+            LET'S<br /><span>BUILD</span><br />SOMETHING GREAT
+          </div>
+          <div class="contact-row reveal">
+            <div class="contact-block">
+              <div class="cblock-label">Email</div>
+              <div class="cblock-val">
+                <a href="mailto:luqmanharriz23@gmail.com" class="hi"
+                  >luqmanharriz23@gmail.com</a
+                >
+              </div>
+            </div>
+            <div class="contact-block">
+              <div class="cblock-label">Phone</div>
+              <div class="cblock-val">
+                <a href="tel:+601111250420">(+60) 11-1125 0420</a>
+              </div>
+            </div>
+            <div class="contact-block">
+              <div class="cblock-label">LinkedIn</div>
+              <div class="cblock-val">
+                <a href="https://linkedin.com/in/luqman-harriz" target="_blank"
+                  >Luqman Harriz</a
+                >
+              </div>
+            </div>
+            <div class="contact-block">
+              <div class="cblock-label">Location</div>
+              <div class="cblock-val">Shah Alam, Selangor, MY</div>
+            </div>
+          </div>
+          <div class="reveal">
+            <a
+              href="mailto:luqmanharriz23@gmail.com"
+              class="btn btn-primary"
+              style="font-size: 0.9rem; padding: 1rem 3rem"
+              >Send Message →</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 Luqman Harriz Bin Saifullizan</span>
+      <span id="footer-time">Shah Alam, Selangor · Malaysia</span>
+    </footer>
+
+    <script>
+      // ── CURSOR ──────────────────────────────────────────────
+      const cur = document.getElementById("cur");
+      const ring = document.getElementById("cur-ring");
+      let mx = 0,
+        my = 0,
+        rx = 0,
+        ry = 0;
+      document.addEventListener("mousemove", (e) => {
+        mx = e.clientX;
+        my = e.clientY;
+      });
+      (function ac() {
+        cur.style.left = mx + "px";
+        cur.style.top = my + "px";
+        rx += (mx - rx) * 0.13;
+        ry += (my - ry) * 0.13;
+        ring.style.left = rx + "px";
+        ring.style.top = ry + "px";
+        requestAnimationFrame(ac);
+      })();
+      document.querySelectorAll("a,button,.race-card,.hstat").forEach((el) => {
+        el.addEventListener("mouseenter", () => {
+          cur.style.cssText += "width:16px;height:16px;";
+          ring.style.cssText +=
+            "width:44px;height:44px;border-color:rgba(232,0,29,1);";
+        });
+        el.addEventListener("mouseleave", () => {
+          cur.style.cssText = "";
+          ring.style.cssText = "";
+        });
+      });
+
+      // ── CLOCK ──────────────────────────────────────────────
+      function updateClock() {
+        const n = new Date();
+        const t = [n.getHours(), n.getMinutes(), n.getSeconds()]
+          .map((x) => String(x).padStart(2, "0"))
+          .join(":");
+        document.getElementById("clock").textContent = t;
+      }
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      // ── TELEMETRY ANIMATION ────────────────────────────────
+      const speeds = ["247", "251", "239", "258", "244"];
+      let si = 0;
+      setInterval(() => {
+        document.getElementById("tel-speed").textContent =
+          speeds[si % speeds.length] + "km/h";
+        si++;
+      }, 1200);
+
+      // ── BG: SPEED LINES ────────────────────────────────────
+      const bgC = document.getElementById("bg-canvas");
+      const bgX = bgC.getContext("2d");
+      let BW, BH;
+      function rsz() {
+        BW = bgC.width = window.innerWidth;
+        BH = bgC.height = window.innerHeight;
+      }
+      rsz();
+      window.addEventListener("resize", rsz);
+
+      const lines = Array.from({ length: 60 }, () => ({
+        x: Math.random() * 3000,
+        y: Math.random() * 3000,
+        len: Math.random() * 120 + 30,
+        speed: Math.random() * 1.5 + 0.5,
+        opacity: Math.random() * 0.06 + 0.01,
+        angle: -0.1 + Math.random() * 0.2,
+      }));
+
+      (function drawBg() {
+        bgX.clearRect(0, 0, BW, BH);
+        lines.forEach((l) => {
+          l.x -= l.speed * 2;
+          if (l.x + l.len < 0) {
+            l.x = BW + l.len;
+            l.y = Math.random() * BH;
+          }
+          bgX.beginPath();
+          bgX.moveTo(l.x, l.y);
+          bgX.lineTo(
+            l.x + l.len * Math.cos(l.angle),
+            l.y + l.len * Math.sin(l.angle),
+          );
+          bgX.strokeStyle = `rgba(232,0,29,${l.opacity})`;
+          bgX.lineWidth = 1;
+          bgX.stroke();
+        });
+        requestAnimationFrame(drawBg);
+      })();
+
+      // ── 3D MATH ────────────────────────────────────────────
+      function rotMat(rx, ry) {
+        const cx = Math.cos(rx),
+          sx = Math.sin(rx),
+          cy = Math.cos(ry),
+          sy = Math.sin(ry);
+        return (v) => {
+          let [x, y, z] = v;
+          let y2 = y * cx - z * sx,
+            z2 = y * sx + z * cx;
+          let x3 = x * cy + z2 * sy,
+            z3 = -x * sy + z2 * cy;
+          return [x3, y2, z3];
+        };
+      }
+      function proj(v, cx, cy, fov = 700) {
+        const z = v[2] + fov,
+          s = fov / z;
+        return [cx + v[0] * s, cy + v[1] * s, s];
+      }
+
+      // ── HERO 3D: F1 Helmet-style icosphere + orbital rings ─
+      const hc = document.getElementById("hero-canvas");
+      const hx = hc.getContext("2d");
+      let hrx = 0.3,
+        hry = 0.1,
+        hDrag = false,
+        hLx = 0,
+        hLy = 0,
+        hAuto = true,
+        ht = 0;
+
+      hc.addEventListener("mousedown", (e) => {
+        hDrag = true;
+        hAuto = false;
+        hLx = e.offsetX;
+        hLy = e.offsetY;
+      });
+      hc.addEventListener("mousemove", (e) => {
+        if (!hDrag) return;
+        hry += (e.offsetX - hLx) * 0.008;
+        hrx += (e.offsetY - hLy) * 0.008;
+        hLx = e.offsetX;
+        hLy = e.offsetY;
+      });
+      hc.addEventListener("mouseup", () => (hDrag = false));
+      hc.addEventListener("mouseleave", () => (hDrag = false));
+
+      // Sphere verts & wireframe
+      function buildSphere(n) {
+        const v = [],
+          e = [];
+        for (let i = 0; i <= n; i++) {
+          const phi = (i / n) * Math.PI;
+          for (let j = 0; j < n * 2; j++) {
+            const theta = (j / (n * 2)) * Math.PI * 2;
+            v.push([
+              Math.sin(phi) * Math.cos(theta),
+              Math.cos(phi),
+              Math.sin(phi) * Math.sin(theta),
+            ]);
+            if (i < n) {
+              e.push([i * n * 2 + j, i * n * 2 + ((j + 1) % (n * 2))]);
+              e.push([i * n * 2 + j, (i + 1) * n * 2 + j]);
+            }
+          }
+        }
+        return { v, e };
+      }
+      const sph = buildSphere(10);
+
+      // Torus ring
+      function buildRing(R, r, seg, ts) {
+        const v = [],
+          e = [];
+        for (let i = 0; i < seg; i++) {
+          const a = (i / seg) * Math.PI * 2;
+          for (let j = 0; j < ts; j++) {
+            const b = (j / ts) * Math.PI * 2;
+            v.push([
+              (R + r * Math.cos(b)) * Math.cos(a),
+              (R + r * Math.cos(b)) * Math.sin(a),
+              r * Math.sin(b),
+            ]);
+            const ai = i * ts + j,
+              bi = ((i + 1) % seg) * ts + j,
+              ci = ((i + 1) % seg) * ts + ((j + 1) % ts),
+              di = i * ts + ((j + 1) % ts);
+            e.push([ai, bi], [bi, ci], [ci, di], [di, ai]);
+          }
+        }
+        return { v, e };
+      }
+      const ring1 = buildRing(1.5, 0.06, 48, 6);
+      const ring2 = buildRing(1.9, 0.04, 48, 4);
+
+      (function drawHero() {
+        const W = hc.width,
+          H = hc.height;
+        hx.clearRect(0, 0, W, H);
+        if (hAuto) {
+          hry += 0.005;
+          hrx += 0.002;
+        }
+        ht += 0.018;
+        const rf = rotMat(hrx, hry);
+        const sc = 160,
+          cx = W / 2,
+          cy = H / 2;
+
+        // sphere wireframe with depth fade
+        sph.e.forEach(([a, b]) => {
+          const va = rf(sph.v[a].map((x) => x * sc));
+          const vb = rf(sph.v[b].map((x) => x * sc));
+          const pa = proj(va, cx, cy);
+          const pb = proj(vb, cx, cy);
+          const dz = Math.min(1, Math.max(0, (pa[2] + pb[2]) * 0.5));
+          hx.beginPath();
+          hx.moveTo(pa[0], pa[1]);
+          hx.lineTo(pb[0], pb[1]);
+          hx.strokeStyle = `rgba(232,0,29,${0.08 + dz * 0.18})`;
+          hx.lineWidth = 0.6;
+          hx.stroke();
+        });
+
+        // centre glow
+        const g = hx.createRadialGradient(cx, cy, 0, cx, cy, sc * 0.7);
+        g.addColorStop(0, "rgba(232,0,29,0.06)");
+        g.addColorStop(1, "transparent");
+        hx.fillStyle = g;
+        hx.beginPath();
+        hx.arc(cx, cy, sc * 0.7, 0, Math.PI * 2);
+        hx.fill();
+
+        // ring 1 — horizontal orbit (tilt)
+        const ring1Rf = rotMat(hrx + 0.4, hry);
+        ring1.e.forEach(([a, b]) => {
+          const pa = proj(ring1Rf(ring1.v[a].map((x) => x * sc)), cx, cy);
+          const pb = proj(ring1Rf(ring1.v[b].map((x) => x * sc)), cx, cy);
+          const dz = (pa[2] + pb[2]) * 0.5;
+          hx.beginPath();
+          hx.moveTo(pa[0], pa[1]);
+          hx.lineTo(pb[0], pb[1]);
+          hx.strokeStyle = `rgba(245,168,0,${0.15 + dz * 0.25})`;
+          hx.lineWidth = 0.8;
+          hx.stroke();
+        });
+
+        // ring 2 — vertical orbit
+        const ring2Rf = rotMat(
+          hrx + Math.PI / 2 + ht * 0.15,
+          hry + Math.PI / 3,
+        );
+        ring2.e.forEach(([a, b]) => {
+          const pa = proj(ring2Rf(ring2.v[a].map((x) => x * sc)), cx, cy);
+          const pb = proj(ring2Rf(ring2.v[b].map((x) => x * sc)), cx, cy);
+          hx.beginPath();
+          hx.moveTo(pa[0], pa[1]);
+          hx.lineTo(pb[0], pb[1]);
+          hx.strokeStyle = "rgba(232,0,29,0.25)";
+          hx.lineWidth = 0.5;
+          hx.stroke();
+        });
+
+        // orbiting dot on ring 1
+        const oa = ht * 1.5;
+        const ox = 1.5 * Math.cos(oa) * sc;
+        const oy = 1.5 * Math.sin(oa) * 0.4 * sc;
+        const ov = ring1Rf([ox / sc, oy / sc, 0].map((x) => x * sc));
+        const op = proj(ov, cx, cy);
+        hx.beginPath();
+        hx.arc(op[0], op[1], 4, 0, Math.PI * 2);
+        hx.fillStyle = "rgba(245,168,0,0.9)";
+        hx.fill();
+        // trail
+        for (let i = 1; i <= 8; i++) {
+          const ta = oa - i * 0.12;
+          const tx = 1.5 * Math.cos(ta) * sc;
+          const ty = 1.5 * Math.sin(ta) * 0.4 * sc;
+          const tv = ring1Rf([tx / sc, ty / sc, 0].map((x) => x * sc));
+          const tp = proj(tv, cx, cy);
+          hx.beginPath();
+          hx.arc(tp[0], tp[1], 4 - i * 0.4, 0, Math.PI * 2);
+          hx.fillStyle = `rgba(245,168,0,${0.7 - i * 0.08})`;
+          hx.fill();
+        }
+
+        // cross-hairs
+        hx.strokeStyle = "rgba(232,0,29,0.12)";
+        hx.lineWidth = 0.5;
+        hx.beginPath();
+        hx.moveTo(cx, 0);
+        hx.lineTo(cx, H);
+        hx.stroke();
+        hx.beginPath();
+        hx.moveTo(0, cy);
+        hx.lineTo(W, cy);
+        hx.stroke();
+
+        // corner brackets
+        const br = 20,
+          bw = 2;
+        [
+          [
+            [15, 15],
+            [15 + br, 15],
+            [15, 15 + br],
+          ],
+          [
+            [W - 15, 15],
+            [W - 15 - br, 15],
+            [W - 15, 15 + br],
+          ],
+          [
+            [15, H - 15],
+            [15 + br, H - 15],
+            [15, H - 15 - br],
+          ],
+          [
+            [W - 15, H - 15],
+            [W - 15 - br, H - 15],
+            [W - 15, H - 15 - br],
+          ],
+        ].forEach((pts) => {
+          hx.beginPath();
+          hx.moveTo(pts[0][0], pts[0][1]);
+          hx.lineTo(pts[1][0], pts[1][1]);
+          hx.moveTo(pts[0][0], pts[0][1]);
+          hx.lineTo(pts[2][0], pts[2][1]);
+          hx.strokeStyle = "rgba(232,0,29,0.4)";
+          hx.lineWidth = bw;
+          hx.stroke();
+        });
+
+        requestAnimationFrame(drawHero);
+      })();
+
+      // ── SCROLL REVEAL ───────────────────────────────────────
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add("visible");
+              io.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.08 },
+      );
+      document
+        .querySelectorAll(".reveal,.pit-stop")
+        .forEach((el) => io.observe(el));
+    </script>
+  </body>
+</html>
