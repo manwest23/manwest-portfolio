@@ -11,6 +11,7 @@
     />
     <style>
       :root {
+        color-scheme: dark;
         --bg: #0a0a0c;
         --bg2: #0f0f12;
         --bg3: #141418;
@@ -25,6 +26,46 @@
         --gold: #f5a800;
         --gold-dim: rgba(245, 168, 0, 0.12);
         --white: #ffffff;
+        --nav-bg: rgba(10, 10, 12, 0.92);
+        --nav-panel-bg: rgba(10, 10, 12, 0.96);
+        --nav-toggle-bg: rgba(255, 255, 255, 0.02);
+        --cursor-ring: rgba(232, 0, 29, 0.6);
+        --ghost-stroke: rgba(255, 255, 255, 0.15);
+        --text-soft: rgba(232, 230, 224, 0.6);
+        --text-faint: rgba(232, 230, 224, 0.55);
+        --text-dim: rgba(232, 230, 224, 0.5);
+        --watermark: rgba(255, 255, 255, 0.03);
+        --ticker-fade: rgba(255, 255, 255, 0.12);
+        --contact-watermark: rgba(255, 255, 255, 0.015);
+        --scanline: rgba(0, 0, 0, 0.015);
+        --theme-btn-bg: rgba(255, 255, 255, 0.02);
+      }
+      :root[data-theme="light"] {
+        color-scheme: light;
+        --bg: #f4efe7;
+        --bg2: #efe8dd;
+        --bg3: #e7ddd0;
+        --surface: #ddd2c3;
+        --line: rgba(25, 23, 20, 0.12);
+        --text: #151312;
+        --muted: #6d6258;
+        --dim: #b5a89a;
+        --red-dim: rgba(232, 0, 29, 0.1);
+        --gold-dim: rgba(245, 168, 0, 0.1);
+        --white: #151312;
+        --nav-bg: rgba(244, 239, 231, 0.92);
+        --nav-panel-bg: rgba(244, 239, 231, 0.98);
+        --nav-toggle-bg: rgba(21, 19, 18, 0.03);
+        --cursor-ring: rgba(232, 0, 29, 0.45);
+        --ghost-stroke: rgba(21, 19, 18, 0.16);
+        --text-soft: rgba(21, 19, 18, 0.68);
+        --text-faint: rgba(21, 19, 18, 0.58);
+        --text-dim: rgba(21, 19, 18, 0.52);
+        --watermark: rgba(21, 19, 18, 0.06);
+        --ticker-fade: rgba(21, 19, 18, 0.18);
+        --contact-watermark: rgba(21, 19, 18, 0.03);
+        --scanline: rgba(255, 255, 255, 0.08);
+        --theme-btn-bg: rgba(21, 19, 18, 0.03);
       }
 
       *,
@@ -84,7 +125,7 @@
         transform: translate(-50%, -50%);
         width: 28px;
         height: 28px;
-        border: 1px solid rgba(232, 0, 29, 0.6);
+        border: 1px solid var(--cursor-ring);
         border-radius: 50%;
         transition:
           transform 0.18s cubic-bezier(0.23, 1, 0.32, 1),
@@ -112,7 +153,7 @@
         align-items: center;
         padding: 0 3rem;
         height: 56px;
-        background: rgba(10, 10, 12, 0.92);
+        background: var(--nav-bg);
         backdrop-filter: blur(16px);
         border-bottom: 1px solid var(--line);
       }
@@ -143,6 +184,11 @@
         display: flex;
         align-items: center;
       }
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
       nav a {
         font-family: "Barlow Condensed", sans-serif;
         font-weight: 600;
@@ -163,7 +209,7 @@
         width: 42px;
         height: 42px;
         border: 1px solid var(--line);
-        background: rgba(255, 255, 255, 0.02);
+        background: var(--nav-toggle-bg);
         color: var(--white);
         cursor: pointer;
         transition:
@@ -173,6 +219,40 @@
       }
       .nav-toggle:hover {
         border-color: rgba(232, 0, 29, 0.4);
+        color: var(--red2);
+      }
+      .theme-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        height: 42px;
+        padding: 0 0.9rem;
+        border: 1px solid var(--line);
+        background: var(--theme-btn-bg);
+        color: var(--white);
+        cursor: pointer;
+        font-family: "Share Tech Mono", monospace;
+        font-size: 0.62rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        transition:
+          border-color 0.2s,
+          color 0.2s,
+          background 0.2s;
+      }
+      .theme-toggle:hover {
+        border-color: rgba(232, 0, 29, 0.4);
+        color: var(--red2);
+      }
+      .theme-toggle-sun,
+      .theme-toggle-moon {
+        font-size: 0.8rem;
+        letter-spacing: 0;
+      }
+      :root[data-theme="light"] .theme-toggle-sun {
+        color: var(--gold);
+      }
+      :root:not([data-theme="light"]) .theme-toggle-moon {
         color: var(--red2);
       }
       .nav-toggle-bars {
@@ -293,7 +373,7 @@
       }
       h1 .ghost {
         color: transparent;
-        -webkit-text-stroke: 1px rgba(255, 255, 255, 0.15);
+        -webkit-text-stroke: 1px var(--ghost-stroke);
       }
       h1 .red {
         color: var(--red);
@@ -542,7 +622,7 @@
       .about-body {
         font-size: 0.88rem;
         line-height: 2;
-        color: rgba(232, 230, 224, 0.6);
+        color: var(--text-soft);
         margin-bottom: 1.2rem;
       }
       .driver-card {
@@ -659,7 +739,7 @@
         font-weight: 900;
         font-size: 5rem;
         line-height: 1;
-        color: rgba(255, 255, 255, 0.03);
+        color: var(--watermark);
         pointer-events: none;
       }
       .race-circuit {
@@ -683,7 +763,7 @@
       .race-desc {
         font-size: 0.78rem;
         line-height: 1.8;
-        color: rgba(232, 230, 224, 0.5);
+        color: var(--text-dim);
       }
       .race-tags {
         display: flex;
@@ -813,7 +893,7 @@
       .pit-body {
         font-size: 0.8rem;
         line-height: 1.9;
-        color: rgba(232, 230, 224, 0.5);
+        color: var(--text-dim);
         max-width: 650px;
       }
 
@@ -858,9 +938,9 @@
         align-items: center;
         gap: 0.6rem;
         padding: 0.55rem 0;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+        border-bottom: 1px solid var(--line);
         font-size: 0.8rem;
-        color: rgba(232, 230, 224, 0.55);
+        color: var(--text-faint);
         transition:
           color 0.2s,
           padding-left 0.2s;
@@ -904,7 +984,7 @@
         font-size: 1.1rem;
         text-transform: uppercase;
         letter-spacing: 0.15em;
-        color: rgba(255, 255, 255, 0.12);
+        color: var(--ticker-fade);
         padding: 0 2.5rem;
         flex-shrink: 0;
         transition: color 0.2s;
@@ -941,7 +1021,7 @@
         font-family: "Barlow Condensed", sans-serif;
         font-weight: 900;
         font-size: 12rem;
-        color: rgba(255, 255, 255, 0.015);
+        color: var(--contact-watermark);
         pointer-events: none;
         letter-spacing: -0.05em;
         white-space: nowrap;
@@ -1038,8 +1118,8 @@
           0deg,
           transparent,
           transparent 2px,
-          rgba(0, 0, 0, 0.015) 2px,
-          rgba(0, 0, 0, 0.015) 4px
+          var(--scanline) 2px,
+          var(--scanline) 4px
         );
       }
 
@@ -1096,7 +1176,7 @@
           flex-direction: column;
           gap: 0;
           padding: 0.85rem 1rem;
-          background: rgba(10, 10, 12, 0.96);
+          background: var(--nav-panel-bg);
           backdrop-filter: blur(16px);
           border: 1px solid var(--line);
         }
@@ -1109,6 +1189,9 @@
         }
         .nav-status {
           display: none;
+        }
+        .theme-toggle {
+          padding: 0 0.8rem;
         }
         footer {
           flex-direction: column;
@@ -1126,19 +1209,6 @@
     <!-- NAV -->
     <nav id="site-nav">
       <a href="#hero" class="nav-logo"><span class="dot"></span>LH.</a>
-      <button
-        class="nav-toggle"
-        type="button"
-        aria-expanded="false"
-        aria-controls="site-nav-menu"
-        aria-label="Toggle navigation menu"
-      >
-        <span class="nav-toggle-bars" aria-hidden="true">
-          <span></span>
-          <span></span>
-          <span></span>
-        </span>
-      </button>
       <div class="nav-menu" id="site-nav-menu">
         <ul>
           <li><a href="#about">Profile</a></li>
@@ -1148,9 +1218,33 @@
           <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
-      <div class="nav-status">
-        <span class="status-dot"></span>
-        <span id="clock">00:00:00</span>
+      <div class="nav-actions">
+        <button
+          class="theme-toggle"
+          type="button"
+          aria-label="Switch between dark and light mode"
+        >
+          <span class="theme-toggle-sun" aria-hidden="true">☼</span>
+          <span class="theme-toggle-label">Light</span>
+          <span class="theme-toggle-moon" aria-hidden="true">◐</span>
+        </button>
+        <div class="nav-status">
+          <span class="status-dot"></span>
+          <span id="clock">00:00:00</span>
+        </div>
+        <button
+          class="nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav-menu"
+          aria-label="Toggle navigation menu"
+        >
+          <span class="nav-toggle-bars" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </span>
+        </button>
       </div>
     </nav>
 
@@ -1686,6 +1780,54 @@
       // ── CURSOR ──────────────────────────────────────────────
       const cur = document.getElementById("cur");
       const ring = document.getElementById("cur-ring");
+      const root = document.documentElement;
+      const themeStorageKey = "manwest-theme";
+      const themeToggle = document.querySelector(".theme-toggle");
+      const themeToggleLabel = themeToggle.querySelector(".theme-toggle-label");
+      function hexToRgb(hex) {
+        const clean = hex.trim().replace("#", "");
+        const normalized =
+          clean.length === 3
+            ? clean
+                .split("")
+                .map((ch) => ch + ch)
+                .join("")
+            : clean;
+        const value = parseInt(normalized, 16);
+        return {
+          r: (value >> 16) & 255,
+          g: (value >> 8) & 255,
+          b: value & 255,
+        };
+      }
+      function themeColor(name) {
+        return getComputedStyle(root).getPropertyValue(name).trim();
+      }
+      function alphaColor(name, alpha) {
+        const { r, g, b } = hexToRgb(themeColor(name));
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+      function applyTheme(theme) {
+        root.setAttribute("data-theme", theme);
+        themeToggleLabel.textContent = theme === "light" ? "Dark" : "Light";
+        themeToggle.setAttribute(
+          "aria-pressed",
+          String(theme === "light"),
+        );
+      }
+      const savedTheme = localStorage.getItem(themeStorageKey);
+      const preferredTheme =
+        savedTheme ||
+        (window.matchMedia("(prefers-color-scheme: light)").matches
+          ? "light"
+          : "dark");
+      applyTheme(preferredTheme);
+      themeToggle.addEventListener("click", () => {
+        const nextTheme =
+          root.getAttribute("data-theme") === "light" ? "dark" : "light";
+        applyTheme(nextTheme);
+        localStorage.setItem(themeStorageKey, nextTheme);
+      });
       let mx = 0,
         my = 0,
         rx = 0,
@@ -1706,8 +1848,10 @@
       document.querySelectorAll("a,button,.race-card,.hstat").forEach((el) => {
         el.addEventListener("mouseenter", () => {
           cur.style.cssText += "width:16px;height:16px;";
-          ring.style.cssText +=
-            "width:44px;height:44px;border-color:rgba(232,0,29,1);";
+          ring.style.cssText += `width:44px;height:44px;border-color:${alphaColor(
+            "--red",
+            1,
+          )};`;
         });
         el.addEventListener("mouseleave", () => {
           cur.style.cssText = "";
@@ -1789,7 +1933,7 @@
             l.x + l.len * Math.cos(l.angle),
             l.y + l.len * Math.sin(l.angle),
           );
-          bgX.strokeStyle = `rgba(232,0,29,${l.opacity})`;
+          bgX.strokeStyle = alphaColor("--red", l.opacity);
           bgX.lineWidth = 1;
           bgX.stroke();
         });
@@ -1916,14 +2060,14 @@
           hx.beginPath();
           hx.moveTo(pa[0], pa[1]);
           hx.lineTo(pb[0], pb[1]);
-          hx.strokeStyle = `rgba(232,0,29,${0.08 + dz * 0.18})`;
+          hx.strokeStyle = alphaColor("--red", 0.08 + dz * 0.18);
           hx.lineWidth = 0.6;
           hx.stroke();
         });
 
         // centre glow
         const g = hx.createRadialGradient(cx, cy, 0, cx, cy, sc * 0.7);
-        g.addColorStop(0, "rgba(232,0,29,0.06)");
+        g.addColorStop(0, alphaColor("--red", 0.06));
         g.addColorStop(1, "transparent");
         hx.fillStyle = g;
         hx.beginPath();
@@ -1939,7 +2083,7 @@
           hx.beginPath();
           hx.moveTo(pa[0], pa[1]);
           hx.lineTo(pb[0], pb[1]);
-          hx.strokeStyle = `rgba(245,168,0,${0.15 + dz * 0.25})`;
+          hx.strokeStyle = alphaColor("--gold", 0.15 + dz * 0.25);
           hx.lineWidth = 0.8;
           hx.stroke();
         });
@@ -1955,7 +2099,7 @@
           hx.beginPath();
           hx.moveTo(pa[0], pa[1]);
           hx.lineTo(pb[0], pb[1]);
-          hx.strokeStyle = "rgba(232,0,29,0.25)";
+          hx.strokeStyle = alphaColor("--red", 0.25);
           hx.lineWidth = 0.5;
           hx.stroke();
         });
@@ -1968,7 +2112,7 @@
         const op = proj(ov, cx, cy);
         hx.beginPath();
         hx.arc(op[0], op[1], 4, 0, Math.PI * 2);
-        hx.fillStyle = "rgba(245,168,0,0.9)";
+        hx.fillStyle = alphaColor("--gold", 0.9);
         hx.fill();
         // trail
         for (let i = 1; i <= 8; i++) {
@@ -1979,12 +2123,12 @@
           const tp = proj(tv, cx, cy);
           hx.beginPath();
           hx.arc(tp[0], tp[1], 4 - i * 0.4, 0, Math.PI * 2);
-          hx.fillStyle = `rgba(245,168,0,${0.7 - i * 0.08})`;
+          hx.fillStyle = alphaColor("--gold", 0.7 - i * 0.08);
           hx.fill();
         }
 
         // cross-hairs
-        hx.strokeStyle = "rgba(232,0,29,0.12)";
+        hx.strokeStyle = alphaColor("--red", 0.12);
         hx.lineWidth = 0.5;
         hx.beginPath();
         hx.moveTo(cx, 0);
@@ -2025,7 +2169,7 @@
           hx.lineTo(pts[1][0], pts[1][1]);
           hx.moveTo(pts[0][0], pts[0][1]);
           hx.lineTo(pts[2][0], pts[2][1]);
-          hx.strokeStyle = "rgba(232,0,29,0.4)";
+          hx.strokeStyle = alphaColor("--red", 0.4);
           hx.lineWidth = bw;
           hx.stroke();
         });
